@@ -1,7 +1,7 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
 import { collectionData, Firestore, collection, doc, onSnapshot} from '@angular/fire/firestore';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +20,7 @@ export class NoteListService implements OnDestroy{
   constructor() {
     this.unsubList = onSnapshot(this.getNotesRef(), (list) =>{
       list.forEach(element => {
-        console.log("list:",element);
+        console.log(this.setNoteObject(element.data(), element.id));
       } );
     });
 
@@ -53,6 +53,17 @@ console.log("single:",element);
   
    getSingleDocRef(colId: string, docId:string){
     return doc(collection(this.firestore, colId), docId);
+   }
+
+   setNoteObject(obj:any, id:string):Note{
+    const note: Note = {
+      id: id,
+      type: obj.type || "note" ,
+      title: obj.title || "",
+      content: obj.content || "",
+      marked: obj.marked || false,
+    }
+    return note;
    }
 
 }
