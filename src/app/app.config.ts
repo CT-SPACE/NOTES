@@ -26,6 +26,6 @@ export const appConfig: ApplicationConfig = {
       provideFirestore(() => getFirestore()),
       provideAnalytics(() => getAnalytics()),
     ]),
-    ScreenTrackingService, importProvidersFrom(provideFirebaseApp(() => initializeApp({"projectId":"da-notes-a4321","appId":"1:853930090073:web:d1045b4d58bcbf77cf9b48","storageBucket":"da-notes-a4321.firebasestorage.app","apiKey":"AIzaSyAgOLWPDos3RgPBtBzpRW749Tqy5Ngi9Lk","authDomain":"da-notes-a4321.firebaseapp.com","messagingSenderId":"853930090073","measurementId":"G-V4952P851J","projectNumber":"853930090073","version":"2"}))), importProvidersFrom(provideAnalytics(() => getAnalytics())), ScreenTrackingService, importProvidersFrom(provideFirestore(() => getFirestore())),
+    ScreenTrackingService,
   ],
 };

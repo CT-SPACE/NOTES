@@ -20,15 +20,11 @@ export class NoteListComponent {
   status: "notes" | "trash" = "notes";
 
   constructor(public noteService: NoteListService) {
-    this.noteList = this.getDummyData()
-//     const firebaseConfig = {
-//   apiKey: "your-api-key",                    // Ihre echte API Key
-//   authDomain: "your-project-id.firebaseapp.com",
-//   projectId: "your-project-id",              // Ihre echte Project ID
-//   storageBucket: "your-project-id.appspot.com",
-//   messagingSenderId: "your-sender-id",       // Ihre echte Sender ID
-//   appId: "your-app-id"                       // Ihre echte App ID
-// };
+
+  }
+
+  getList(): Note[]{
+    return this.noteService.normalNotes;
   }
 
   changeFavFilter(filter:"all" | "fav"){
