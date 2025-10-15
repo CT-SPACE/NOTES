@@ -7,6 +7,7 @@ import { NoteComponent } from './note/note.component';
 
 
 
+
 @Component({
   selector: 'app-note-list',
   standalone: true,
