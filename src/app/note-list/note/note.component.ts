@@ -43,7 +43,7 @@ export class NoteComponent {
     this.note.type = 'trash';
     let docId = this.note.id;
     delete this.note.id;
-    this.noteService.addNote(this.note, "trash");
+    this.noteService.addNote(this.note, "trash", docId);
     this.noteService.deleteNote("notes", docId);
   }
 }
@@ -51,13 +51,17 @@ export class NoteComponent {
   moveToNotes(){
     if(this.note.type == "trash"){
  this.note.type = 'note';
-      this.noteService.addNote(this.note, "notes");
+ let docId = this.note.id;
+    delete this.note.id;
+      this.noteService.addNote(this.note, "notes", docId);
+       this.noteService.deleteNote("trash", docId!);
     }
    
   }
 
   deleteNote(){
     if(this.note.id){
+      console.log("Deleting note with id:", this.note.id);
       this.noteService.deleteNote("trash", this.note.id);
     }
 
@@ -66,4 +70,7 @@ export class NoteComponent {
   saveNote(){
     this.noteService.updateNote(this.note);
   }
+
+
+
 }

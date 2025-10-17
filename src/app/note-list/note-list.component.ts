@@ -25,7 +25,17 @@ export class NoteListComponent {
   }
 
   getList(): Note[]{
-    return this.noteService.normalNotes;
+    // return this.noteService.normalNotes;
+    console.log("Getting list with status:", this.status, "and favFilter:", this.favFilter);
+    if(this.status == "trash"){
+      return this.noteService.trashNotes;
+    } else {
+      if(this.favFilter == "fav"){
+         return this.noteService.normalNotes.filter(note => note.marked);
+    } else {
+      return this.noteService.normalNotes;
+    }
+  }
   }
 
   changeFavFilter(filter:"all" | "fav"){
@@ -33,14 +43,17 @@ export class NoteListComponent {
   }
 
   changeTrashStatus(){
+      console.log('Trash button clicked');
+  console.log('trashNotes:', this.noteService.trashNotes);
+console.log('current status before change:', this.status);
     if(this.status == "trash"){
       this.status = "notes";
     } else {
       this.status = "trash";
-      this.favFilter = "all";
+      this.favFilter = "all"
     }
+    console.log('new status after change:', this.status);
   }
-
 
 
 
