@@ -111,7 +111,8 @@ export class NoteListService implements OnDestroy {
   }
 
   subNotesList() {
-    const q = query(this.getNotesRef(), orderBy("title"), limit(19));
+    let ref = collection(this.firestore, "notes/VNeNDoysVGHQFCd76hhy/notesExtra");
+    const q = query(ref, orderBy("title"), limit(19));
     return onSnapshot(q, (list) => {
       this.normalNotes = [];
       list.forEach((element) => {
