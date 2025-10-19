@@ -1,7 +1,7 @@
 import { Injectable, inject, OnDestroy } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
 import {
-  collectionData,
+  // collectionData,
   Firestore,
   collection,
   doc,
@@ -9,8 +9,12 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
+  query,
+  limit,
+  orderBy,
+  where
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+// import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,24 +22,18 @@ import { Observable } from 'rxjs';
 export class NoteListService implements OnDestroy {
   trashNotes: Note[] = [];
   normalNotes: Note[] = [];
+  normalMarkedNotes: Note[] = [];
   firestore = inject(Firestore);
   unsubNotes;
   unsubTrash;
+  unsubMarkedNotes;
 
   constructor() {
     this.unsubTrash = this.subTrashList();
     this.unsubNotes = this.subNotesList();
+    this.unsubMarkedNotes = this.subMarkedNotesList();
   }
 
-  // async addNote(item:Note, colId: 'notes' | 'trash'){
-
-  //   await addDoc(this.getNotesRef(),item).catch(
-  //     (err) => {  console.error(err)}
-  //   ).then(
-  //     (docRef) => { console.log("Document written with id: ", docRef?.id);}
-  //     );
-
-  // }
 
   async addNote(item: Note, colId: 'notes' | 'trash', docId?: string) {
     if (!docId) {
@@ -100,6 +98,7 @@ export class NoteListService implements OnDestroy {
   ngOnDestroy() {
     this.unsubTrash();
     this.unsubNotes();
+      this.unsubMarkedNotes();
   }
 
   subTrashList() {
@@ -112,11 +111,40 @@ export class NoteListService implements OnDestroy {
   }
 
   subNotesList() {
-    return onSnapshot(this.getNotesRef(), (list) => {
+    const q = query(this.getNotesRef(), orderBy("title"), limit(19));
+    return onSnapshot(q, (list) => {
       this.normalNotes = [];
       list.forEach((element) => {
         this.normalNotes.push(this.setNoteObject(element.data(), element.id));
       });
+      list.docChanges().forEach((change) => {
+        if(change.type === "added"){
+          console.log("New note added: ", change.doc.data());
+        }
+                if(change.type === "modified"){
+          console.log("Note modified: ",change.doc.data());
+        }
+                if(change.type === "removed"){
+          console.log("Note removed: ", change.doc.data());
+        }
+      })
+          this.normalNotes.sort((a, b) => 
+      a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+    );
+    });
+  }
+
+  subMarkedNotesList(){
+        const q = query(this.getNotesRef(), where("marked", "==", true));
+    return onSnapshot(q, (list) => {
+      this.normalMarkedNotes = [];
+      list.forEach((element) => {
+        this.normalMarkedNotes.push(this.setNoteObject(element.data(), element.id));
+      });
+          this.normalMarkedNotes.sort((a, b) => 
+      a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+    );
+        console.log('Marked notes loaded:', this.normalMarkedNotes); // 
     });
   }
 

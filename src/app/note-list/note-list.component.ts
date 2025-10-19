@@ -31,7 +31,7 @@ export class NoteListComponent {
       return this.noteService.trashNotes;
     } else {
       if(this.favFilter == "fav"){
-         return this.noteService.normalNotes.filter(note => note.marked);
+         return this.noteService.normalMarkedNotes;
     } else {
       return this.noteService.normalNotes;
     }
